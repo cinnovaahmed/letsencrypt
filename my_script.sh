@@ -7,9 +7,11 @@ email="your-email@example.com"
 # Run Certbot in manual mode with DNS-01 challenge
 certbot_command="sudo certbot certonly --manual --preferred-challenges=dns -d $domain --register-unsafely-without-email --agree-tos"
 
-# Execute Certbot command and wait for user to create DNS TXT record
-echo "Please create the required DNS TXT record as instructed by Certbot, then press Enter to continue..."
-read -p ""
-
 # Execute Certbot command
-$certbot_command
+$certbot_command &
+
+# Sleep for 2 seconds
+sleep 2
+
+# Press Enter
+echo -e "\n" | sudo tee -a /dev/tty
