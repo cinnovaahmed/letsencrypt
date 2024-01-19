@@ -13,7 +13,7 @@ var server = http.createServer(function (req, res) {   // 2 - creating server
                 res.writeHead(200, { 'Content-Type': 'text/html' });
 
                 // set response content    
-                let str = stdout.trim().split(' ')
+                let str = stdout.trim().replace('\n',' ').split(' ')
                 res.write(JSON.stringify(str));
                 res.end();
 
