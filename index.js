@@ -19,7 +19,32 @@ var server = http.createServer(function (req, res) {   // 2 - creating server
             });
 
     }
-    if(req.url === '/abc'){
+    if (req.url === '/abc') {
+        const greenlock = require('greenlock');
+
+        const lex = greenlock.create({
+          // Replace with your domain
+          servername: 'sysmon.lab.unifiedeverything.com',
+          challenges: {
+            'dns-01': require('greenlock-challenge-dns-provider').create(),
+          },
+        });
+        
+        lex.check({
+          domains: ['*.lab.unifiedeverything.com'],
+        }).then(() => {
+          // Access the TXT data
+          const txtData = lex.challenges['dns-01'].get({
+            identifier: 'lab.unifiedeverything.com',
+            dnsChallenge: {
+              recordName: '_acme-challenge.lab.unifiedeverything.com',
+            },
+          });
+        
+          console.log('TXT Data:', txtData);
+        }).catch((err) => {
+          console.error('Error:', err);
+        });
         
     }
     //handle incomming requests here..
