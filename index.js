@@ -4,6 +4,9 @@ var server = http.createServer(function (req, res) {   // 2 - creating server
     if (req.url == '/') { //check the URL of the current request
         console.log('abc')
         try {
+            console.log('Command:', command);
+            console.log('stdout:', stdout);
+            console.log('stderr:', stderr);
             const child = exec('./my_script.sh --domain "lab.unifiedeverything.com" --email "syedahmedali08@gmail.com"',
                 (error, stdout, stderr) => {
                     console.log(stdout);
@@ -13,17 +16,17 @@ var server = http.createServer(function (req, res) {   // 2 - creating server
                     }
                     // set response header|
                     res.writeHead(200, { 'Content-Type': 'application/json' });
-    
+
                     // set response content    
-    
+
                     res.write(stdout);
                     res.end();
-    
+
                 });
-            
+
         } catch (error) {
             res.writeHead(200, { 'Content-Type': 'application/json' });
-    
+
             // set response content    
 
             res.write(error);
