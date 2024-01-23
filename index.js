@@ -4,7 +4,7 @@ var server = http.createServer(function (req, res) {   // 2 - creating server
     if (req.url == '/') { //check the URL of the current request
         console.log('abc')
         try {
-            const child = exec('./my_script.sh --domain "lab.unifiedeverything.com" --email "syedahmedali08@gmail.com"',
+            const child = exec('./my_script.sh "*.lab.yourdomain.com" "your-email@example.com"',
                 (error, stdout, stderr) => {
                     console.log('Command:', error);
                     console.log('stdout:', stdout);
