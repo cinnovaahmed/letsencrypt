@@ -37,5 +37,6 @@ certbot_output=$(sudo certbot certonly --manual --preferred-challenges=dns -d "$
 # Extract TXT data
 txt_data=$(get_txt_data "$certbot_output")
 
+
 # Print the TXT data
 echo "TXT Data: $txt_data"
