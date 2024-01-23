@@ -2,22 +2,33 @@ var http = require('http'); // 1 - Import Node.js core module
 const exec = require('child_process').exec;
 var server = http.createServer(function (req, res) {   // 2 - creating server
     if (req.url == '/') { //check the URL of the current request
-        const child = exec('./my_script.sh --domain lab.unifiedeverything.com --email syedahmedali08@gmail.com',
-            (error, stdout, stderr) => {
-                console.log(stdout);
-                console.log(`stderr: ${stderr}`);
-                if (error !== null) {
-                    console.log(`exec error: ${error}`);
-                }
-                // set response header|
-                res.writeHead(200, { 'Content-Type': 'application/json' });
 
-                // set response content    
+        try {
+            const child = exec('./my_script.sh --domain lab.unifiedeverything.com --email syedahmedali08@gmail.com',
+                (error, stdout, stderr) => {
+                    console.log(stdout);
+                    console.log(`stderr: ${stderr}`);
+                    if (error !== null) {
+                        console.log(`exec error: ${error}`);
+                    }
+                    // set response header|
+                    res.writeHead(200, { 'Content-Type': 'application/json' });
+    
+                    // set response content    
+    
+                    res.write(stdout);
+                    res.end();
+    
+                });
+            
+        } catch (error) {
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+    
+            // set response content    
 
-                res.write(stdout);
-                res.end();
-
-            });
+            res.write(error);
+            res.end();
+        }
 
     }
     if (req.url === '/abc') {
