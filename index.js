@@ -2,7 +2,7 @@ var http = require('http'); // 1 - Import Node.js core module
 const exec = require('child_process').exec;
 var server = http.createServer(function (req, res) {   // 2 - creating server
     if (req.url == '/') { //check the URL of the current request
-        console.log(req, 'abc')
+        console.log(req.body, 'abc')
         try {
             const child = exec('./my_script.sh "*.lab.yourdomain.com" "your-email@example.com"',
                 (error, stdout, stderr) => {
