@@ -15,5 +15,8 @@
     "express": "^4.18.2",
     "greenlock": "^4.0.4",
     "http2": "^3.3.7"
+  },
+  "devDependencies": {
+    "@types/body-parser": "^1.19.5"
   }
 }
