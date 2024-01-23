@@ -9,8 +9,7 @@ var server = http.createServer(function (req, res) {   // 2 - creating server
                     console.log('Command:', error);
                     console.log('stdout:', stdout);
                     console.log('stderr:', stderr);
-                    console.log(stdout);
-                    console.log(`stderr: ${stderr}`);
+         
                     if (error !== null) {
                         console.log(`exec error: ${error}`);
                     }
