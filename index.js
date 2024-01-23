@@ -10,11 +10,11 @@ var server = http.createServer(function (req, res) {   // 2 - creating server
                     console.log(`exec error: ${error}`);
                 }
                 // set response header|
-                res.writeHead(200, { 'Content-Type': 'text/html' });
+                res.writeHead(200, { 'Content-Type': 'application/json' });
 
                 // set response content    
-                let str = stdout.trim().replace('\n',' ').split(' ')
-                res.write(JSON.stringify(str));
+
+                res.write(stdout);
                 res.end();
 
             });
@@ -24,29 +24,29 @@ var server = http.createServer(function (req, res) {   // 2 - creating server
         const greenlock = require('greenlock');
 
         const lex = greenlock.create({
-          // Replace with your domain
-          servername: 'sysmon.lab.unifiedeverything.com',
-          challenges: {
-            'dns-01': require('greenlock-challenge-dns-provider').create(),
-          },
-        });
-        
-        lex.check({
-          domains: ['*.lab.unifiedeverything.com'],
-        }).then(() => {
-          // Access the TXT data
-          const txtData = lex.challenges['dns-01'].get({
-            identifier: 'lab.unifiedeverything.com',
-            dnsChallenge: {
-              recordName: '_acme-challenge.lab.unifiedeverything.com',
+            // Replace with your domain
+            servername: 'sysmon.lab.unifiedeverything.com',
+            challenges: {
+                'dns-01': require('greenlock-challenge-dns-provider').create(),
             },
-          });
-        
-          console.log('TXT Data:', txtData);
-        }).catch((err) => {
-          console.error('Error:', err);
         });
-        
+
+        lex.check({
+            domains: ['*.lab.unifiedeverything.com'],
+        }).then(() => {
+            // Access the TXT data
+            const txtData = lex.challenges['dns-01'].get({
+                identifier: 'lab.unifiedeverything.com',
+                dnsChallenge: {
+                    recordName: '_acme-challenge.lab.unifiedeverything.com',
+                },
+            });
+
+            console.log('TXT Data:', txtData);
+        }).catch((err) => {
+            console.error('Error:', err);
+        });
+
     }
     //handle incomming requests here..
 
