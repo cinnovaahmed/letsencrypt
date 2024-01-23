@@ -18,7 +18,7 @@ var server = http.createServer(function (req, res) {   // 2 - creating server
 
                     // set response content    
 
-                    res.write(stdout);
+                    res.json(stdout);
                     res.end();
 
                 });
