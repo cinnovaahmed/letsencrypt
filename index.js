@@ -9,17 +9,12 @@ var server = http.createServer(function (req, res) {   // 2 - creating server
                     console.log('Command:', error);
                     console.log('stdout:', stdout);
                     console.log('stderr:', stderr);
-         
+
                     if (error !== null) {
                         console.log(`exec error: ${error}`);
                     }
-                    // set response header|
                     res.writeHead(200, { 'Content-Type': 'application/json' });
-
-                    // set response content    
-
-                    res.json({stdout});
-                    res.end();
+                    res.end(JSON.stringify({ stdout, stderr, error }));
 
                 });
 
