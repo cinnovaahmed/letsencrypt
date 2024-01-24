@@ -14,7 +14,7 @@ email="$2"
 certbot_command="sudo certbot certonly --manual --preferred-challenges=dns -d $domain -m $email --agree-tos"
 
 # Execute Certbot command
-$certbot_command &
+echo "1" | $certbot_command &
 
 # Sleep for 2 seconds
 sleep 2
