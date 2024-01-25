@@ -23,7 +23,7 @@ var server = http.createServer(function (req, res) {
                     });
 
             } catch (error) {
-                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.writeHead(500, { 'Content-Type': 'application/json' });
 
                 // set response content    
 
