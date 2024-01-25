@@ -11,7 +11,7 @@ domain="$1"
 email="$2"
 
 # Run Certbot in manual mode with DNS-01 challenge
-certbot_command="sudo certbot certonly --manual --preferred-challenges=dns -d $domain -m $email --agree-tos"
+certbot_command="sudo certbot certonly --manual --preferred-challenges=dns -d $domain -m $email --agree-tos --test-cert"
 
 # Execute Certbot command
 echo "1" | $certbot_command &
