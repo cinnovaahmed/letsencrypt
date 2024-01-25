@@ -8,7 +8,7 @@ var server = http.createServer(function (req, res) {
         if (req.url == '/') { //check the URL of the current request
             console.log(req.body, 'abc')
             try {
-                const child = exec(`./my_script.sh "*.${req.body.portalRoot}" "your-email@example.com"`,
+                const child = exec(`./my_script.sh "*.${req.body.portalRoot}" "${req.body.email}"`,
                     (error, stdout, stderr) => {
                         console.log('Command:', error);
                         console.log('stdout:', stdout);
