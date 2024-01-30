@@ -13,12 +13,11 @@ email="$2"
 # Run Certbot in manual mode with DNS-01 challenge
 certbot_command="sudo certbot certonly --manual --preferred-challenges=dns -d $domain -m $email --agree-tos --test-cert"
 
-# Execute Certbot command in the background
-$certbot_command &
-pid=$!
+# Execute Certbot command
+echo "1" | $certbot_command &
 
 # Sleep for 2 seconds
 sleep 2
 
-# Press Ctrl+C to simulate user interruption
-kill -INT "$pid"
+# Press Enter
+echo -e "\n" | sudo tee -a /dev/tty
