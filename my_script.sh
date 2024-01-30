@@ -15,9 +15,11 @@ certbot_command="sudo certbot certonly --manual --preferred-challenges=dns -d $d
 
 # Execute Certbot command
 echo "1" | $certbot_command &
+pid=$!
 
 # Sleep for 2 seconds
 sleep 2
 
-# Press Enter
-echo -e "\n" | sudo tee -a /dev/tty
+# Press Ctrl+c
+kill -INT "$pid"
+# echo -e "\n" | sudo tee -a /dev/tty
