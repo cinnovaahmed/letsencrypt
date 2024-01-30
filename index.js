@@ -12,9 +12,7 @@ var server = http.createServer(function (req, res) {
             try {
                 let certDomainsStr = extractDomains(body);
                 console.log(certDomainsStr)
-                res.writeHead(200, { 'Content-Type': 'application/json' });
-                        res.end(JSON.stringify({ certDomainsStr }));
-                return;
+
                 const child = exec(`./my_script.sh "*.${certDomainsStr}" "${req.body.email}"`,
                     (error, stdout, stderr) => {
                         console.log('Command:', error);
