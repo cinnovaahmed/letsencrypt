@@ -13,7 +13,7 @@ var server = http.createServer(function (req, res) {
                 let certDomainsStr = extractDomains(body);
                 console.log(certDomainsStr)
 
-                const child = exec(`./my_script.sh "*.${certDomainsStr}" "${req.body.email}"`,
+                const child = exec(`./my_script.sh "${certDomainsStr}" "${req.body.email}"`,
                     (error, stdout, stderr) => {
                         console.log('Command:', error);
                         console.log('stdout:', stdout);
