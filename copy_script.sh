@@ -39,23 +39,23 @@ cleanup_directory() {
     fi
 }
 
+# Check if the source directory exists
 if [ -d "$source_directory/$domain" ]; then
-    # If the source directory exists, copy it to the destination archive
+    # Check if the destination archive directory exists, create it if necessary, and then copy the source directory
     if [ -d "$destination_archive/$domain" ]; then
-        # If the destination archive directory exists, copy the source directory to it
-        cp "$source_directory/$domain" "$destination_archive"
-        echo "Directory copied successfully!"
+        cp -r "$source_directory/$domain" "$destination_archive"
+        echo "Directory copied successfully to archive!"
     else
-        # If the destination archive directory doesn't exist, create it and then copy the source directory
-        mkdir -p "$destination_archive/$domain"
-        cp "$source_directory/$domain" "$destination_archive"
-        echo "Directory copied successfully!"
+        mkdir -p "$destination_archive/$domain" && cp -r "$source_directory/$domain" "$destination_archive"
+        echo "Directory copied successfully to archive!"
     fi
     cleanup_directory "$destination_archive/$domain"
 else
     # If the source directory doesn't exist, display an error message
     echo "Source directory does not exist."
+    exit 1
 fi
 
-# Copy domain certificates to azure fuseblob storage for it to be shared
-cp -r "/etc/letsencrypt/live/$domain" "$destination_directory"
+# Copy domain certificates to azure fuseblob storage for sharing
+cp -r "$source_directory/$domain" "$destination_directory"
+echo "Directory copied successfully to live!"
