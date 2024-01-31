@@ -54,19 +54,19 @@ var server = http.createServer(function (req, res) {
                             console.log(domainCert);
 
                             const child = exec(`./copy_script.sh "${domainCert}"`,
-                                (error, stdout, stderr) => {
+                                (copyError, copyStdout, copyStderr) => {
 
-                                    console.log('Command:', error);
-                                    console.log('stdout:', stdout);
-                                    console.log('stderr:', stderr);
+                                    console.log('Command:', copyError);
+                                    console.log('stdout:', copyStdout);
+                                    console.log('stderr:', copyStderr);
 
 
 
-                                    if (error !== null) {
-                                        console.log(`exec error: ${error}`);
+                                    if (copyError !== null) {
+                                        console.log(`exec copyError: ${copyError}`);
                                     }
                                     res.writeHead(200, { 'Content-Type': 'application/json' });
-                                    res.end(JSON.stringify({ stdout, stderr, error, certData }));
+                                    res.end(JSON.stringify({ stdout, stderr, error, certData, copyError, copyStderr, copyStdout }));
 
                                 });
 
