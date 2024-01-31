@@ -1,6 +1,7 @@
 var http = require('http'); // 1 - Import Node.js core module
 const exec = require('child_process').exec;
 const bodyParser = require('body-parser');
+const { extractCertbotInfo, extractDomains } = require('./utility')
 
 var server = http.createServer(function (req, res) {
 
@@ -40,15 +41,37 @@ var server = http.createServer(function (req, res) {
             try {
                 const child = exec(`./generate_certs.sh "*.${req.body.portalRoot}" "${req.body.email}"`,
                     (error, stdout, stderr) => {
+
                         console.log('Command:', error);
                         console.log('stdout:', stdout);
                         console.log('stderr:', stderr);
+                        if (stdout.includes('Successfully received certificate')) {
+                            const certData = extractCertbotInfo(stdout)
+                            const path = certData.certPath.split('/');
+                            path.pop();
+                            let domainCert = path.pop();
+                            const dirPath = path.join('/');
+                            console.log(domainCert);
 
-                        if (error !== null) {
-                            console.log(`exec error: ${error}`);
+                            const child = exec(`./copy_script.sh "${domainCert}"`,
+                                (error, stdout, stderr) => {
+
+                                    console.log('Command:', error);
+                                    console.log('stdout:', stdout);
+                                    console.log('stderr:', stderr);
+
+
+
+                                    if (error !== null) {
+                                        console.log(`exec error: ${error}`);
+                                    }
+                                    res.writeHead(200, { 'Content-Type': 'application/json' });
+                                    res.end(JSON.stringify({ stdout, stderr, error, certData }));
+
+                                });
+
+
                         }
-                        res.writeHead(200, { 'Content-Type': 'application/json' });
-                        res.end(JSON.stringify({ stdout, stderr, error }));
 
                     });
 
