@@ -4,8 +4,8 @@
 source_directory="/etc/letsencrypt/live"
 
 # Specify the destination where you want to move the directory
-destination_directory="~/fuseDir/live"
-destination_archive="~/fuseDir/archive"
+destination_directory="$HOME/fuseDir/live"
+destination_archive="$HOME/fuseDir/archive"
 
 # Check if domain is provided as a command-line argument
 if [ "$#" -ne 1 ]; then
