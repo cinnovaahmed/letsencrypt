@@ -12,8 +12,8 @@ make_curl_request() {
     # Make the cURL request
     curl -s -X POST \
         -H "Content-Type: application/json" \
-        -H "x-functions-key: TG0eZ4ZnALBvcff1ySfTFZPGp0IQG05umlC51quuETEGAzFuWa5PlA==" \
-        -H "Authorization: Basic YXBpX3VlLWxhYjpQZWNnb2otanlzcmU5LWR5anF5bQ==" \
+        -H "x-functions-key: {{X-FUNCTION-KEY}}" \
+        -H "Authorization: Basic {{AUTH-KEY}}" \
         -d '{
                 "portalRootSubstring": "'"$hostname"'",
                 "reqType": "'"$request_type"'"
