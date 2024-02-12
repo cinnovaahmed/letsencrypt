@@ -2,6 +2,7 @@
 
 # Specify the directory you want to check and move
 source_directory="/etc/letsencrypt/live"
+temp_directory="/tempCertLocation"
 
 # Specify the destination where you want to move the directory
 destination_directory="$HOME/fuseDir/live"
@@ -39,14 +40,17 @@ cleanup_directory() {
     fi
 }
 
+# 
+rm -R $temp_directory/$domain
 # Check if the source directory exists
+
 if [ -d "$source_directory/$domain" ]; then
     # Check if the destination archive directory exists, create it if necessary, and then copy the source directory
     if [ -d "$destination_archive/$domain" ]; then
-        cp -r "$source_directory/$domain" "$destination_archive"
+        cp -L -r "$source_directory/$domain" "$temp_directory" && cp -r "$temp_directory/$domain" "$destination_archive"
         echo "Directory copied successfully to archive!"
     else
-        mkdir -p "$destination_archive/$domain" && cp -r "$source_directory/$domain" "$destination_archive"
+        mkdir -p "$destination_archive/$domain" && cp -L -r "$source_directory/$domain" "$temp_directory" && cp -r "$temp_directory/$domain" "$destination_archive"
         echo "Directory copied successfully to archive!"
     fi
     cleanup_directory "$destination_archive/$domain"
@@ -57,5 +61,5 @@ else
 fi
 
 # Copy domain certificates to azure fuseblob storage for sharing
-cp -r "$source_directory/$domain" "$destination_directory"
+cp -L -r "$source_directory/$domain" "$temp_directory" && cp -r "$temp_directory/$domain" "$destination_directory"
 echo "Directory copied successfully to live!"
