@@ -85,6 +85,55 @@ var server = http.createServer(function (req, res) {
             }
 
         }
+        if (req.url == '/renew-certs') { //check the URL of the current request
+            console.log(req.body, 'abc')
+            try {
+                const child = exec(`./renew_certs.sh "*.${req.body.portalRoot}" "${req.body.email}"`,
+                    (error, stdout, stderr) => {
+
+                        console.log('Command:', error);
+                        console.log('stdout:', stdout);
+                        console.log('stderr:', stderr);
+                        if (stdout.includes('Successfully received certificate')) {
+                            const certData = extractCertbotInfo(stdout)
+                            const path = certData.certPath.split('/');
+                            path.pop();
+                            let domainCert = path.pop();
+                            const dirPath = path.join('/');
+                            console.log(domainCert);
+
+                            const child = exec(`./renew_copy_script.sh "${domainCert}"`,
+                                (copyError, copyStdout, copyStderr) => {
+
+                                    console.log('Command:', copyError);
+                                    console.log('stdout:', copyStdout);
+                                    console.log('stderr:', copyStderr);
+
+
+
+                                    if (copyError !== null) {
+                                        console.log(`exec copyError: ${copyError}`);
+                                    }
+                                    res.writeHead(200, { 'Content-Type': 'application/json' });
+                                    res.end(JSON.stringify({ stdout, stderr, error, certData, copyError, copyStderr, copyStdout }));
+
+                                });
+
+
+                        }
+
+                    });
+
+            } catch (error) {
+                res.writeHead(500, { 'Content-Type': 'application/json' });
+
+                // set response content    
+
+                res.write(error);
+                res.end();
+            }
+
+        }
     })
 
 
