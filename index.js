@@ -1,9 +1,15 @@
 var http = require('http'); // 1 - Import Node.js core module
+const https = require('https'); // Import Node.js core module for https
 const exec = require('child_process').exec;
 const bodyParser = require('body-parser');
 const { extractCertbotInfo, extractDomains } = require('./utility')
 
-var server = http.createServer(function (req, res) {
+const sslOptions = {
+    key: fs.readFileSync('/root/fuseDir/live/lab.unifiedeverything.com/privkey.pem'), // Replace with the path to your key file
+    cert: fs.readFileSync('/root/fuseDir/live/lab.unifiedeverything.com/fullchain.pem'), // Replace with the path to your fullchain file
+};
+
+var server = https.createServer(sslOptions, function (req, res) {
 
     bodyParser.json()(req, res, async function () {
         if (req.url == '/') { //check the URL of the current request
