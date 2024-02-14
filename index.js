@@ -3,6 +3,7 @@ const https = require('https'); // Import Node.js core module for https
 const exec = require('child_process').exec;
 const bodyParser = require('body-parser');
 const { extractCertbotInfo, extractDomains } = require('./utility')
+const fs = require('fs');
 
 const sslOptions = {
     key: fs.readFileSync('/root/fuseDir/live/lab.unifiedeverything.com/privkey.pem'), // Replace with the path to your key file
