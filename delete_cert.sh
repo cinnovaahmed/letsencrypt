@@ -33,6 +33,5 @@ remove_path() {
 remove_path "$live_letsencrypt/$domain"
 remove_path "$archive_letsencrypt/$domain"
 remove_path "$renewal_letsencrypt/$domain.conf"
-remove_path "$temp_directory/$domain"
 remove_path "$live_fuse_directory/$domain"
 remove_path "$archive_fuse_directory/$domain"
