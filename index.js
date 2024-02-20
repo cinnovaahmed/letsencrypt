@@ -144,16 +144,28 @@ var server = https.createServer(sslOptions, function (req, res) {
         if (req.url == '/delete-cert') { //check the URL of the current request
             console.log(req.body, 'abc')
             try {
-                const child = exec(`./delete_cert.sh "${req.body.portalRoot}"`,
-                    (error, stdout, stderr) => {
+                const child = exec(`./delete_cert.sh "${req.body.oldPortalRoot}"`,
+                    (delError, delStdout, delStderr) => {
 
-                        console.log('Command:', error);
-                        console.log('stdout:', stdout);
-                        console.log('stderr:', stderr);
+                        console.log('Command:', delError);
+                        console.log('delStdout:', delStdout);
+                        console.log('delStderr:', delStderr);
 
-                        res.writeHead(200, { 'Content-Type': 'application/json' });
-                        res.end(JSON.stringify({ stdout, stderr, error }));
+                        // res.writeHead(200, { 'Content-Type': 'application/json' });
+                        // res.end(JSON.stringify({ stdout, stderr, error }));
+                        const child = exec(`./my_script.sh "*.${req.body.portalRoot}" "${req.body.email}"`,
+                            (error, stdout, stderr) => {
+                                console.log('Command:', error);
+                                console.log('stdout:', stdout);
+                                console.log('stderr:', stderr);
 
+                                if (error !== null) {
+                                    console.log(`exec error: ${error}`);
+                                }
+                                res.writeHead(200, { 'Content-Type': 'application/json' });
+                                res.end(JSON.stringify({ stdout, stderr, error, delError, delStderr, delStdout }));
+
+                            });
                     });
 
             } catch (error) {
