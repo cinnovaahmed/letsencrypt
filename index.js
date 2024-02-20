@@ -13,7 +13,7 @@ const sslOptions = {
 var server = https.createServer(sslOptions, function (req, res) {
 
     bodyParser.json()(req, res, async function () {
-        if (req.url == '/') { //check the URL of the current request
+        if (req.url == '/generate-txt') { //check the URL of the current request
             console.log(req.body, 'abc')
             const body = req.body;
             setTimeout(() => {
