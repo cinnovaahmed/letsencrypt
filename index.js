@@ -212,6 +212,7 @@ app.post('/generate-txt', (req, res) => {
                     // return res.status(500).json({ error: `exec error: ${error}` });
                 }
                 res.status(200).json({ error, stdout, stderr });
+                res.destroy()
             });
         } catch (error) {
             res.status(500).json({ error: error.toString() });
@@ -312,6 +313,7 @@ app.post('/delete-cert', (req, res) => {
             const child = exec(`./delete_cert.sh "${req.body.portalRoot}"`, (error, stdout, stderr) => {
 
                 res.status(200).json({ error, stdout, stderr });
+                res.destroy()
             });
         } catch (error) {
             console.error(error);
