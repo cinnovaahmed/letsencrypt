@@ -16,33 +16,34 @@ var server = https.createServer(sslOptions, function (req, res) {
         if (req.url == '/generate-txt') { //check the URL of the current request
             console.log(req.body, 'abc')
             const body = req.body;
-            setTimeout(() => {
-                try {
-                    // let certDomainsStr = extractDomains(body);
-                    // console.log(certDomainsStr)
-                    const child = exec(`./my_script.sh "*.${req.body.portalRoot}" "${req.body.email}"`,
-                        (error, stdout, stderr) => {
-                            console.log('Command:', error);
-                            console.log('stdout:', stdout);
-                            console.log('stderr:', stderr);
+            try {
+                // let certDomainsStr = extractDomains(body);
+                // console.log(certDomainsStr)
+                const child = exec(`./my_script.sh "*.${req.body.portalRoot}" "${req.body.email}"`,
+                    (error, stdout, stderr) => {
+                        console.log('Command:', error);
+                        console.log('stdout:', stdout);
+                        console.log('stderr:', stderr);
 
-                            if (error !== null) {
-                                console.log(`exec error: ${error}`);
-                            }
-                            res.writeHead(200, { 'Content-Type': 'application/json' });
-                            res.end(JSON.stringify({ stdout, stderr, error }));
+                        if (error !== null) {
+                            console.log(`exec error: ${error}`);
+                        }
+                        // res.writeHead(200, { 'Content-Type': 'application/json' });
+                        // res.end(JSON.stringify({ stdout, stderr, error }));
+                        res.json({ stdout, stderr, error });
 
-                        });
+                    });
 
-                } catch (error) {
-                    res.writeHead(500, { 'Content-Type': 'application/json' });
+            } catch (error) {
+                // res.writeHead(500, { 'Content-Type': 'application/json' });
 
-                    // set response content    
+                // // set response content    
 
-                    res.write(error);
-                    res.end();
-                }
-            }, 5000);
+                // res.write(error);
+                // res.end();
+                res.json({ error });
+
+            }
 
         }
         if (req.url == '/generate-certs') { //check the URL of the current request
@@ -147,15 +148,15 @@ var server = https.createServer(sslOptions, function (req, res) {
             console.log(req.body, 'abc')
             setTimeout(() => {
                 try {
-                    const child = exec(`./delete_cert.sh "*.${req.body.portalRoot}"`,
+                    const child = exec(`./delete_cert.sh "${req.body.portalRoot}"`,
                         (error, stdout, stderr) => {
 
                             console.log('Command:', error);
                             console.log('stdout:', stdout);
                             console.log('stderr:', stderr);
 
-                            res.writeHead(200, { 'Content-Type': 'application/json' });
-                            res.end(JSON.stringify({ stdout, stderr, error }));
+                            // res.writeHead(200, { 'Content-Type': 'application/json' });
+                            res.json({ stdout, stderr, error });
 
                         });
 
@@ -164,8 +165,8 @@ var server = https.createServer(sslOptions, function (req, res) {
 
                     // set response content    
 
-                    res.write(error);
-                    res.end();
+                    res.json({ error });
+
                 }
             }, 1000);
 
