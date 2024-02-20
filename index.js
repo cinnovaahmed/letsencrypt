@@ -153,7 +153,7 @@ var server = https.createServer(sslOptions, function (req, res) {
 
                         // res.writeHead(200, { 'Content-Type': 'application/json' });
                         // res.end(JSON.stringify({ stdout, stderr, error }));
-                        const child = exec(`./my_script.sh "*.${req.body.portalRoot}" "${req.body.email}"`,
+                        const child = exec(`./my_script.sh "*.${req.body.newPortalRoot}" "${req.body.email}"`,
                             (error, stdout, stderr) => {
                                 console.log('Command:', error);
                                 console.log('stdout:', stdout);
