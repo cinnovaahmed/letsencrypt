@@ -21,3 +21,6 @@ sleep 2
 
 # Press Enter
 echo -e "\n" | sudo tee -a /dev/tty
+
+# Sleep for 5 seconds
+sleep 5
