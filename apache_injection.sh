@@ -3,7 +3,12 @@
 # Get the hostname
 hostname=$(hostname)
 
-# Make CURL request to middleware
+# Define paths
+cert_file="$HOME/fuseDir/live/$hostname/fullchain.pem"
+cert_privkey="$HOME/fuseDir/live/$hostname/privkey.pem"
+custom_conf="/etc/apache2/conf.d/custom.conf"
+unique_path="/etc/apache2/sites-enabled/conf.d/${hostname}.conf"
+
 make_curl_request() {
     local url="$1"
     local hostname="$2"
@@ -24,6 +29,19 @@ make_curl_request() {
 # URL
 url="https://middlewarenode01z-az-usc01-01.azurewebsites.net/api/create-certs"
 
+# Check if record exists
+hostname_record_status=$(make_curl_request "$url" "$hostname" "getVanityCertsByPortalRoot")
+
+# Terminate script if no json is found
+if [[ -z $hostname_record_status || $hostname_record_status == "null" ]]; then
+    echo "No JSON data found or JSON data is null. Exiting."
+
+    # Apache cleanup
+    if [[ -e $unique_path ]]; then
+      rm "$unique_path"
+    fi
+    exit 1
+fi
 # Check hostname staus
 hostname_status=$(make_curl_request "$url" "$hostname" "pendingCerts")
 
@@ -32,12 +50,6 @@ if [[ -z $hostname_status || $hostname_status == "null" ]]; then
     echo "No JSON data found or JSON data is null. Exiting."
     exit 1
 fi
-
-# Define paths
-cert_file="$HOME/fuseDir/live/$hostname/fullchain.pem"
-cert_privkey="$HOME/fuseDir/live/$hostname/privkey.pem"
-custom_conf="/etc/apache2/conf.d/custom.conf"
-unique_path="/etc/apache2/sites-enabled/conf.d/${hostname}.conf"
 
 # Define configuration content
 config_content="
