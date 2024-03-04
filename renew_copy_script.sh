@@ -17,32 +17,25 @@ fi
 # Assign command-line arguments to variables
 domain="$1"
 
-# Clean directory
+# Cleanup function to maintain only the last 3 versions in the archive
 cleanup_directory() {
     local target_directory="$1"
+    # List directories, sort by name (assuming timestamp naming), keep last 3
+    local directories=( $(ls -1 "$target_directory" | sort -r) )
+    local count=${#directories[@]}
 
-    # Check if the target directory exists
-    if [ -d "$target_directory" ]; then
-        # Get the number of directories in the target directory
-        num_directories=$(find "$target_directory" -maxdepth 1 -type d | wc -l)
-
-        # Check if there are more than 3 directories
-        if [ "$num_directories" -gt 3 ]; then
-            # Find and delete the oldest directory
-            oldest_directory=$(ls -1t "$target_directory" | tail -n 1)
-            echo "Deleting the oldest directory: $oldest_directory"
-            rm -r "$target_directory/$oldest_directory"
-        else
-            echo "No action required. There are $num_directories directories."
-        fi
-    else
-        echo "Target directory does not exist."
+    # Delete all but the newest 3 directories
+    if [ "$count" -gt 3 ]; then
+        for (( i=3; i<$count; i++ )); do
+            echo "Deleting older directory: ${directories[$i]}"
+            rm -rf "$target_directory/${directories[$i]}"
+        done
     fi
 }
 
 # remove the domain directory from temp folder, if it already exists.
 if [ -d "$temp_directory/$domain" ]; then
-    rm -r "$temp_directory/$domain"
+    rm -rf "$temp_directory/$domain"
     echo "Directory $temp_directory/$domain removed successfully."
 else
     echo "Directory $temp_directory/$domain does not exist."
@@ -50,30 +43,37 @@ fi
 
 # remove the domain directory from FUSE, if it already exists.
 if [ -d "$destination_directory/$domain" ]; then
-    rm -r "$destination_directory/$domain"
+    rm -rf "$destination_directory/$domain"
     echo "Directory $destination_directory/$domain removed successfully."
 else
     echo "Directory $destination_directory/$domain does not exist."
 fi
 
-# Check if the source directory exists
-
+# Continue if the source directory exists
 if [ -d "$source_directory/$domain" ]; then
-    # Check if the destination archive directory exists, create it if necessary, and then copy the source directory
-    if [ -d "$destination_archive/$domain" ]; then
-        cp -L -r "$source_directory/$domain" "$temp_directory" && cp -r "$temp_directory/$domain" "$destination_archive"
-        echo "Directory copied successfully to archive!"
-    else
-        mkdir -p "$destination_archive/$domain" && cp -L -r "$source_directory/$domain" "$temp_directory" && cp -r "$temp_directory/$domain" "$destination_archive"
-        echo "Directory copied successfully to archive!"
-    fi
+    # First, copy the certificates to a temporary location
+    cp -L -r "$source_directory/$domain" "$temp_directory"
+
+    # Ensure the archive directory for the domain exists
+    mkdir -p "$destination_archive/$domain"
+    
+    # Generate a unique timestamp for the current version
+    current_timestamp=$(date +%Y%m%d%H%M%S)
+
+    # Move the certificates from the temp location to the archive with a timestamp
+    cp -r "$temp_directory/$domain" "$destination_archive/$domain/$current_timestamp"
+    echo "Certificates copied to archive with timestamp $current_timestamp"
+
+    # Clean up the archive to keep only the last 3 versions
     cleanup_directory "$destination_archive/$domain"
+    
+    # Finally, move the certificates from the temp location to the live directory
+    cp -r "$temp_directory/$domain" "$destination_directory"
+    echo "Certificates copied to live directory!"
+
+    # Optionally, clean up the temp directory after operations
+    rm -rf $temp_directory/$domain
 else
-    # If the source directory doesn't exist, display an error message
     echo "Source directory does not exist."
     exit 1
 fi
-
-# Copy domain certificates to azure fuseblob storage for sharing
-cp -L -r "$source_directory/$domain" "$temp_directory" && cp -r "$temp_directory/$domain" "$destination_directory"
-echo "Directory copied successfully to live!"

@@ -133,7 +133,11 @@ var server = https.createServer(sslOptions, function (req, res) {
 
 
                         }
+                        else{
+                            res.writeHead(200, { 'Content-Type': 'application/json' });
+                            res.end(JSON.stringify({ stdout, stderr, error }));
 
+                        }
                     });
 
             } catch (error) {
