@@ -193,8 +193,8 @@ var server = https.createServer(sslOptions, function (req, res) {
             try {
                 // let certDomainsStr = extractDomains(body);
                 // console.log(certDomainsStr)
-                let suDomains = req.body.superDomains.map((x)=> `*.${x}`).join(', ')
-                const child = exec(`./core_txt_generation.sh "${suDomains}" "${req.body.email}" "${req.body.superDomains.length -1}"`,
+                let suDomains = req.body.superDomains.map((x)=> `*.${x}`).join(',')
+                const child = exec(`./core_txt_generation.sh "${suDomains}" "${req.body.email}" "${req.body.superDomains.length}"`,
                     (error, stdout, stderr) => {
                         console.log('Command:', error);
                         console.log('stdout:', stdout);
