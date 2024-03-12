@@ -187,6 +187,37 @@ var server = https.createServer(sslOptions, function (req, res) {
             }
 
         }
+        if (req.url == '/generate-core-txt') { //check the URL of the current request
+            console.log(req.body, 'abc')
+            const body = req.body;
+            try {
+                // let certDomainsStr = extractDomains(body);
+                // console.log(certDomainsStr)
+                let suDomains = req.body.superDomains.map((x)=> `*.${x}`).join(', ')
+                const child = exec(`./core_txt_generation.sh "${suDomains}" "${req.body.email}" "${req.body.superDomains.length -1}"`,
+                    (error, stdout, stderr) => {
+                        console.log('Command:', error);
+                        console.log('stdout:', stdout);
+                        console.log('stderr:', stderr);
+
+                        if (error !== null) {
+                            console.log(`exec error: ${error}`);
+                        }
+                        res.writeHead(200, { 'Content-Type': 'application/json' });
+                        res.end(JSON.stringify({ stdout, stderr, error }));
+
+                    });
+
+            } catch (error) {
+                res.writeHead(500, { 'Content-Type': 'application/json' });
+
+                // set response content    
+
+                res.write(error);
+                res.end();
+            }
+
+        }
     })
 });
 
