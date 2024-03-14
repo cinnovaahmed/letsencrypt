@@ -79,7 +79,7 @@ var server = https.createServer(sslOptions, function (req, res) {
 
 
                         }
-                        else{
+                        else {
                             res.writeHead(200, { 'Content-Type': 'application/json' });
                             res.end(JSON.stringify({ stdout, stderr, error }));
 
@@ -133,7 +133,7 @@ var server = https.createServer(sslOptions, function (req, res) {
 
 
                         }
-                        else{
+                        else {
                             res.writeHead(200, { 'Content-Type': 'application/json' });
                             res.end(JSON.stringify({ stdout, stderr, error }));
 
@@ -193,7 +193,7 @@ var server = https.createServer(sslOptions, function (req, res) {
             try {
                 // let certDomainsStr = extractDomains(body);
                 // console.log(certDomainsStr)
-                let suDomains = req.body.superDomains.map((x)=> `*.${x}`).join(',')
+                let suDomains = req.body.superDomains.map((x) => `*.${x}`).join(',')
                 const child = exec(`./core_txt_generation.sh "${suDomains}" "${req.body.email}" "${req.body.superDomains.length}"`,
                     (error, stdout, stderr) => {
                         console.log('Command:', error);
@@ -206,6 +206,31 @@ var server = https.createServer(sslOptions, function (req, res) {
                         res.writeHead(200, { 'Content-Type': 'application/json' });
                         res.end(JSON.stringify({ stdout, stderr, error }));
 
+                    });
+
+            } catch (error) {
+                res.writeHead(500, { 'Content-Type': 'application/json' });
+
+                // set response content    
+
+                res.write(error);
+                res.end();
+            }
+
+        }
+        if (req.url == '/delete-core-cert') { //check the URL of the current request
+            console.log(req.body, 'abc')
+            try {
+                const child = exec(`./delete_cert.sh "${req.body.portalRoot}"`,
+                    (delError, delStdout, delStderr) => {
+
+                        console.log('Command:', delError);
+                        console.log('delStdout:', delStdout);
+                        console.log('delStderr:', delStderr);
+
+
+                        res.writeHead(200, { 'Content-Type': 'application/json' });
+                        res.end(JSON.stringify({ delError, delStderr, delStdout }));
                     });
 
             } catch (error) {
