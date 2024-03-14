@@ -133,23 +133,42 @@ var server = https.createServer(sslOptions, function (req, res) {
                             let domainCert = path.pop();
                             const dirPath = path.join('/');
                             console.log(domainCert);
+                            if (req.body.suDomainsBoolean) {
+                                const child = exec(`./renew_copy_core_script.sh "${domainCert}"`,
+                                    (copyError, copyStdout, copyStderr) => {
 
-                            const child = exec(`./renew_copy_script.sh "${domainCert}"`,
-                                (copyError, copyStdout, copyStderr) => {
-
-                                    console.log('Command:', copyError);
-                                    console.log('stdout:', copyStdout);
-                                    console.log('stderr:', copyStderr);
+                                        console.log('Command:', copyError);
+                                        console.log('stdout:', copyStdout);
+                                        console.log('stderr:', copyStderr);
 
 
 
-                                    if (copyError !== null) {
-                                        console.log(`exec copyError: ${copyError}`);
-                                    }
-                                    res.writeHead(200, { 'Content-Type': 'application/json' });
-                                    res.end(JSON.stringify({ stdout, stderr, error, certData, copyError, copyStderr, copyStdout }));
+                                        if (copyError !== null) {
+                                            console.log(`exec copyError: ${copyError}`);
+                                        }
+                                        res.writeHead(200, { 'Content-Type': 'application/json' });
+                                        res.end(JSON.stringify({ stdout, stderr, error, certData, copyError, copyStderr, copyStdout }));
 
-                                });
+                                    });
+                            }
+                            else {
+                                const child = exec(`./renew_copy_script.sh "${domainCert}"`,
+                                    (copyError, copyStdout, copyStderr) => {
+
+                                        console.log('Command:', copyError);
+                                        console.log('stdout:', copyStdout);
+                                        console.log('stderr:', copyStderr);
+
+
+
+                                        if (copyError !== null) {
+                                            console.log(`exec copyError: ${copyError}`);
+                                        }
+                                        res.writeHead(200, { 'Content-Type': 'application/json' });
+                                        res.end(JSON.stringify({ stdout, stderr, error, certData, copyError, copyStderr, copyStdout }));
+
+                                    });
+                            }
 
 
                         }
@@ -241,7 +260,7 @@ var server = https.createServer(sslOptions, function (req, res) {
         if (req.url == '/delete-core-cert') { //check the URL of the current request
             console.log(req.body, 'abc')
             try {
-                const child = exec(`./delete_cert.sh "${req.body.portalRoot}"`,
+                const child = exec(`./delete_core_cert.sh "${req.body.portalRoot}"`,
                     (delError, delStdout, delStderr) => {
 
                         console.log('Command:', delError);
