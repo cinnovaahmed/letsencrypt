@@ -3,8 +3,8 @@
 # Directories specification
 source_directory="/etc/letsencrypt/live"
 temp_directory="/tempCertLocation"
-destination_directory="$HOME/fuseDir/live/core"
-destination_archive="$HOME/fuseDir/archive/core"
+destination_directory="$HOME/fuseDir/core/live"
+destination_archive="$HOME/fuseDir/core/archive"
 
 # Check for the domain argument
 if [ "$#" -ne 1 ]; then

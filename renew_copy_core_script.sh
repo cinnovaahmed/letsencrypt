@@ -5,8 +5,8 @@ source_directory="/etc/letsencrypt/live"
 temp_directory="/tempCertLocation"
 
 # Specify the destination where you want to move the directory
-destination_directory="$HOME/fuseDir/live/core"
-destination_archive="$HOME/fuseDir/archive/core"
+destination_directory="$HOME/fuseDir/core/live"
+destination_archive="$HOME/fuseDir/core/archive"
 
 # Check if domain is provided as a command-line argument
 if [ "$#" -ne 1 ]; then

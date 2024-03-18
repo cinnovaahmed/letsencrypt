@@ -6,8 +6,8 @@ archive_letsencrypt="/etc/letsencrypt/archive"
 renewal_letsencrypt="/etc/letsencrypt/renewal"
 
 # Specify the destination for FUSE 
-live_fuse_directory="$HOME/fuseDir/live/core"
-archive_fuse_directory="$HOME/fuseDir/archive/core"
+live_fuse_directory="$HOME/fuseDir/core/live"
+archive_fuse_directory="$HOME/fuseDir/core/archive"
 
 # Check if domain is provided as a command-line argument
 if [ "$#" -ne 1 ]; then
